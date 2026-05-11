@@ -1,42 +1,47 @@
 name: Gerar versão do projeto
 run-name: ${{ github.actor }} está gerando uma nova versão do projeto
 
+# Dispara em todo push na branch principal
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-
-permissions:
-  id-token: write
-  contents: write
-  issues: write
-  pull-requests: write
-
+    paths:
+      - 'plugin.php'   # só quando o plugin for alterado
 
 jobs:
   release:
+    name: Gerar versão e tag semântica
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # necessário para criar tags e releases
 
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
-        with: 
-          fetch-depth: 0
-
-      - name: Instalar Node.js
-        uses: actions/setup-node@v3
+      # 1. Checkout completo (com histórico para leitura de commits)
+      - name: 📥 Checkout do repositório
+        uses: actions/checkout@v4
         with:
-          node-version: '24.10.0'
+          fetch-depth: 0   # histórico completo para o Conventional Commits
 
-      - name: Instalar dependências
-        run: npm install
+      # 2. Configurar Node (usado pelo semantic-release)
+      - name: 🟢 Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Executar Semantic Release
+      # 3. Instalar semantic-release e plugins necessários
+      - name: 📦 Instalar dependências
+        run: |
+          npm install --save-dev \
+            semantic-release \
+            @semantic-release/changelog \
+            @semantic-release/git \
+            @semantic-release/github \
+            @semantic-release/exec
+
+      # 4. Executar o semantic-release
+      #    A lógica de bump está no .releaserc.json (criado abaixo via artefato separado)
+      - name: 🚀 Executar semantic-release
         env:
-          # GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
