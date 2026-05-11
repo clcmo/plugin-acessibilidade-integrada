@@ -1,10 +1,9 @@
 <?php
 /**
  * Plugin Name: Plugin de Acessibilidade Integrado (PAI)
- * Description: Versão 5.0.0: Botão flutuante com vLibras, controle de contraste, tamanho de fonte e filtros de daltonismo (WCAG 2.1 AA).
- * Version: 5.0.0
+ * Description: Versão 5.1.0: Menu flutuante auto-ajustável, vLibras padronizado e filtros de daltonismo.
+ * Version: 5.1.0
  * Author: Camila
- * Text Domain: pai-accessibility
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -23,210 +22,156 @@ add_action( 'wp_footer', 'pai_render_widget' );
 function pai_render_widget() {
     ?>
     <style>
-        /* =============================================
-           PAI – Plugin de Acessibilidade Integrado
-           Version: 5.0.0
-        ============================================= */
-
         :root {
-            --pai-bg:           #0073aa;
-            --pai-bg-hover:     #005a87;
-            --pai-menu-bg:      #ffffff;
-            --pai-menu-border:  #dddddd;
-            --pai-menu-text:    #333333;
-            --pai-btn-border:   #0073aa;
-            --pai-btn-color:    #0073aa;
-            --pai-btn-hover-bg: #0073aa;
-            --pai-btn-hover-fg: #ffffff;
-            --pai-shadow:       rgba(0,0,0,0.2);
+            --pai-bg: #0073aa;
+            --pai-menu-bg: #ffffff;
+            --pai-menu-text: #333333;
+            --pai-btn-border: #0073aa;
+            --pai-shadow: rgba(0,0,0,0.2);
         }
 
         body.pai-high-contrast {
-            --pai-bg:           #ffff00;
-            --pai-bg-hover:     #cccc00;
-            --pai-menu-bg:      #000000;
-            --pai-menu-border:  #ffff00;
-            --pai-menu-text:    #ffffff;
-            --pai-btn-border:   #ffff00;
-            --pai-btn-color:    #ffff00;
-            --pai-btn-hover-bg: #ffff00;
-            --pai-btn-hover-fg: #000000;
-            background-color:   #000000 !important;
-            color:              #ffffff !important;
+            --pai-menu-bg: #000000;
+            --pai-menu-text: #ffffff;
+            --pai-btn-border: #ffff00;
+            background-color: #000 !important;
+            color: #fff !important;
         }
 
-        /* Daltonismo - Classes de Filtro */
-        .pai-protanopia { filter: url('#pai-filter-protanopia'); }
-        .pai-deuteranopia { filter: url('#pai-filter-deuteranopia'); }
-        .pai-tritanopia { filter: url('#pai-filter-tritanopia'); }
+        /* Classes de Filtro */
+        .pai-protanopia { filter: url('#pai-f-p'); }
+        .pai-deuteranopia { filter: url('#pai-f-d'); }
+        .pai-tritanopia { filter: url('#pai-f-t'); }
         .pai-achromatopsia { filter: grayscale(1); }
 
-        /* Botão flutuante */
         #pai-btn {
             position: fixed; bottom: 20px; right: 20px;
             background: var(--pai-bg); color: #fff;
             width: 55px; height: 55px; border-radius: 50%;
-            border: 2px solid transparent; display: flex;
-            align-items: center; justify-content: center;
-            cursor: pointer; z-index: 10000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: transform 0.2s, background 0.2s;
-        }
-        #pai-btn:hover, #pai-btn:focus-visible {
-            transform: scale(1.1); background: var(--pai-bg-hover);
-            outline: 3px solid #fff; outline-offset: 2px;
+            border: none; cursor: pointer; z-index: 10001;
+            box-shadow: 0 4px 10px var(--pai-shadow);
         }
 
-        /* Menu */
         #pai-menu {
             position: fixed; bottom: 85px; right: 20px;
             background: var(--pai-menu-bg); border: 1px solid var(--pai-menu-border);
-            padding: 20px; border-radius: 12px; z-index: 9999;
+            padding: 15px; border-radius: 12px; z-index: 10000;
             width: 280px; box-shadow: 0 10px 25px var(--pai-shadow);
-            font-family: sans-serif; color: var(--pai-menu-text);
-            max-height: 80vh; overflow-y: auto;
+            display: flex; flex-direction: column;
+            height: auto; /* Altura automática */
         }
-        #pai-menu[hidden] { display: none; }
-        #pai-menu h3 { margin: 0 0 15px 0; font-size: 18px; text-align: center; }
 
-        .pai-section-title {
-            font-size: 12px; font-weight: bold; margin: 15px 0 8px;
-            color: var(--pai-menu-text); text-transform: uppercase; opacity: 0.7;
-        }
+        .pai-section-title { font-size: 11px; font-weight: bold; margin: 10px 0 5px; opacity: 0.7; text-transform: uppercase; }
 
         .pai-opt {
             display: flex; align-items: center; width: 100%;
-            padding: 10px; margin-bottom: 6px;
+            padding: 10px; margin-bottom: 5px;
             border: 2px solid var(--pai-btn-border);
-            background: transparent; color: var(--pai-btn-color);
-            border-radius: 5px; cursor: pointer;
-            font-weight: bold; font-size: 14px; text-align: left;
-        }
-        .pai-opt:hover, .pai-opt:focus-visible, .pai-opt.active {
-            background: var(--pai-btn-hover-bg); color: var(--pai-btn-hover-fg);
+            background: transparent; color: var(--pai-btn-border);
+            border-radius: 6px; cursor: pointer; font-weight: bold;
         }
 
-        .pai-icon {
-            font-family: 'Material Symbols Outlined'; font-size: 20px;
-            margin-right: 10px; font-variation-settings: 'FILL' 0;
-        }
-        .pai-opt.active .pai-icon { font-variation-settings: 'FILL' 1; }
+        .pai-opt:hover, .pai-opt.active { background: var(--pai-bg); color: #fff; }
 
-        .pai-divider { margin: 15px 0; border: 0; border-top: 1px solid var(--pai-menu-border); }
+        /* Ajuste vLibras para parecer um botão do menu */
+        .v-libras-wrapper {
+            position: relative !important;
+            width: 100% !important;
+            height: 45px !important;
+            border: 2px solid var(--pai-btn-border);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        /* Esconde o boneco inicial do vLibras para não flutuar fora do menu */
+        [vw-access-button] { 
+            position: relative !important; 
+            top: 0 !important; right: 0 !important; 
+            width: 100% !important; height: 100% !important; 
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
     </style>
 
-    <!-- Filtros SVG para Daltonismo -->
-    <svg style="display:none" aria-hidden="true">
+    <svg style="display:none">
         <defs>
-            <filter id="pai-filter-protanopia"><feColorMatrix values="0.567, 0.433, 0, 0, 0, 0.558, 0.442, 0, 0, 0, 0, 0.242, 0.758, 0, 0, 0, 0, 0, 1, 0"/></filter>
-            <filter id="pai-filter-deuteranopia"><feColorMatrix values="0.625, 0.375, 0, 0, 0, 0.7, 0.3, 0, 0, 0, 0, 0.3, 0.7, 0, 0, 0, 0, 0, 1, 0"/></filter>
-            <filter id="pai-filter-tritanopia"><feColorMatrix values="0.95, 0.05, 0, 0, 0, 0, 0.433, 0.567, 0, 0, 0, 0.475, 0.525, 0, 0, 0, 0, 0, 1, 0"/></filter>
+            <filter id="pai-f-p"><feColorMatrix values="0.567, 0.433, 0, 0, 0, 0.558, 0.442, 0, 0, 0, 0, 0.242, 0.758, 0, 0, 0, 0, 0, 1, 0"/></filter>
+            <filter id="pai-f-d"><feColorMatrix values="0.625, 0.375, 0, 0, 0, 0.7, 0.3, 0, 0, 0, 0, 0.3, 0.7, 0, 0, 0, 0, 0, 1, 0"/></filter>
+            <filter id="pai-f-t"><feColorMatrix values="0.95, 0.05, 0, 0, 0, 0, 0.433, 0.567, 0, 0, 0, 0.475, 0.525, 0, 0, 0, 0, 0, 1, 0"/></filter>
         </defs>
     </svg>
 
-    <button id="pai-btn" aria-haspopup="dialog" aria-expanded="false" aria-controls="pai-menu" aria-label="Menu de acessibilidade">
-        <span class="material-symbols-outlined pai-icon" style="font-size:30px; margin:0;">accessibility_new</span>
-    </button>
+    <button id="pai-btn"><span class="material-symbols-outlined">accessibility_new</span></button>
 
-    <div id="pai-menu" role="dialog" aria-label="Opções de acessibilidade" hidden>
-        <h3>Acessibilidade</h3>
-
-        <div class="pai-section-title">Visual</div>
-        <button class="pai-opt" id="pai-contrast-btn" aria-pressed="false">
-            <span class="material-symbols-outlined pai-icon">contrast</span> Alto Contraste
-        </button>
-        <button class="pai-opt" id="pai-font-up-btn" aria-label="Aumentar texto">
-            <span class="material-symbols-outlined pai-icon">text_increase</span> Aumentar Texto
-        </button>
-        <button class="pai-opt" id="pai-font-down-btn" aria-label="Diminuir texto">
-            <span class="material-symbols-outlined pai-icon">text_decrease</span> Diminuir Texto
-        </button>
+    <div id="pai-menu" style="display:none;">
+        <h3 style="margin:0 0 10px; text-align:center;">Acessibilidade</h3>
+        
+        <button class="pai-opt" id="pai-contrast-btn">Contraste</button>
+        <button class="pai-opt" id="pai-font-up">Aumentar Texto</button>
+        <button class="pai-opt" id="pai-font-down">Diminuir Texto</button>
 
         <div class="pai-section-title">Daltonismo</div>
-        <button class="pai-opt pai-filter-opt" data-filter="pai-protanopia">Protanopia</button>
-        <button class="pai-opt pai-filter-opt" data-filter="pai-deuteranopia">Deuteranopia</button>
-        <button class="pai-opt pai-filter-opt" data-filter="pai-tritanopia">Tritanopia</button>
-        <button class="pai-opt pai-filter-opt" data-filter="pai-achromatopsia">Acromatopsia</button>
-
-        <button class="pai-opt" id="pai-reset-btn" style="margin-top:10px; border-color:#cc0000; color:#cc0000;">
-            <span class="material-symbols-outlined pai-icon">settings_backup_restore</span> Resetar Tudo
-        </button>
-
-        <hr class="pai-divider">
-
-        <!-- vLibras -->
-        <div vw class="enabled" style="position:relative!important;left:0!important;top:0!important;margin:0 auto;">
+        <button class="pai-opt d-opt" data-filter="pai-protanopia">Protanopia</button>
+        <button class="pai-opt d-opt" data-filter="pai-deuteranopia">Deuteranopia</button>
+        
+        <div class="pai-section-title">Tradução</div>
+        <div vw class="enabled v-libras-wrapper">
             <div vw-access-button class="active"></div>
             <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
         </div>
+
+        <button class="pai-opt" id="pai-reset" style="margin-top:10px; color:red; border-color:red;">Resetar</button>
     </div>
 
     <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
     <script>
     (function () {
-        'use strict';
-        const STORAGE_KEY = 'pai_prefs_v5';
-        const state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { contrast: false, fontSize: 0, filter: '' };
-
-        const btn = document.getElementById('pai-btn');
+        const state = JSON.parse(localStorage.getItem('pai_v5')) || { contrast: false, fontSize: 0, filter: '' };
         const menu = document.getElementById('pai-menu');
-        const filterBtns = document.querySelectorAll('.pai-filter-opt');
+        const btn = document.getElementById('pai-btn');
 
-        if (window.VLibras) new window.VLibras.Widget('https://vlibras.gov.br/app');
+        if(window.VLibras) new window.VLibras.Widget('https://vlibras.gov.br/app');
 
-        function applyState() {
-            // Contraste
+        function apply() {
             document.body.classList.toggle('pai-high-contrast', state.contrast);
-            document.getElementById('pai-contrast-btn').setAttribute('aria-pressed', state.contrast);
-            document.getElementById('pai-contrast-btn').classList.toggle('active', state.contrast);
-
-            // Filtros Daltonismo
-            document.body.classList.remove('pai-protanopia', 'pai-deuteranopia', 'pai-tritanopia', 'pai-achromatopsia');
-            filterBtns.forEach(b => b.classList.remove('active'));
-            if (state.filter) {
-                document.body.classList.add(state.filter);
-                const activeBtn = document.querySelector(`[data-filter="${state.filter}"]`);
-                if (activeBtn) activeBtn.classList.add('active');
-            }
-
-            // Fonte
-            document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, a, span').forEach(el => {
-                let base = parseFloat(el.getAttribute('data-pai-base') || window.getComputedStyle(el).fontSize);
-                if (!el.getAttribute('data-pai-base')) el.setAttribute('data-pai-base', base);
-                el.style.fontSize = state.fontSize === 0 ? '' : (Math.min(Math.max(base + state.fontSize, 10), 32)) + 'px';
+            document.body.classList.remove('pai-protanopia', 'pai-deuteranopia');
+            if (state.filter) document.body.classList.add(state.filter);
+            
+            document.querySelectorAll('.d-opt').forEach(b => b.classList.toggle('active', b.dataset.filter === state.filter));
+            
+            document.querySelectorAll('p, h1, h2, h3, a').forEach(el => {
+                let base = parseFloat(el.getAttribute('data-base') || window.getComputedStyle(el).fontSize);
+                if(!el.getAttribute('data-base')) el.setAttribute('data-base', base);
+                el.style.fontSize = (base + state.fontSize) + 'px';
             });
-
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            localStorage.setItem('pai_v5', JSON.stringify(state));
         }
 
-        // Handlers
         btn.onclick = () => {
-            menu.hidden = !menu.hidden;
-            btn.setAttribute('aria-expanded', !menu.hidden);
-            if (!menu.hidden) menu.querySelector('button').focus();
+            const isOpening = menu.style.display === 'none';
+            menu.style.display = isOpening ? 'flex' : 'none';
+            
+            // Se fechar o menu, encerra o vLibras (limpa a instância visual se aberta)
+            if (!isOpening && window.VLibras) {
+                const closeV = document.querySelector('.vw-plugin-top-wrapper .access-button-close');
+                if(closeV) closeV.click();
+            }
         };
 
-        document.getElementById('pai-contrast-btn').onclick = () => { state.contrast = !state.contrast; applyState(); };
-        document.getElementById('pai-font-up-btn').onclick = () => { state.fontSize += 2; applyState(); };
-        document.getElementById('pai-font-down-btn').onclick = () => { state.fontSize -= 2; applyState(); };
+        document.getElementById('pai-contrast-btn').onclick = () => { state.contrast = !state.contrast; apply(); };
+        document.getElementById('pai-font-up').onclick = () => { state.fontSize += 2; apply(); };
+        document.getElementById('pai-font-down').onclick = () => { state.fontSize -= 2; apply(); };
         
-        filterBtns.forEach(fBtn => {
-            fBtn.onclick = () => {
-                state.filter = (state.filter === fBtn.dataset.filter) ? '' : fBtn.dataset.filter;
-                applyState();
-            };
+        document.querySelectorAll('.d-opt').forEach(b => {
+            b.onclick = () => { state.filter = (state.filter === b.dataset.filter) ? '' : b.dataset.filter; apply(); };
         });
 
-        document.getElementById('pai-reset-btn').onclick = () => {
+        document.getElementById('pai-reset').onclick = () => {
             state.contrast = false; state.fontSize = 0; state.filter = '';
-            applyState();
+            apply();
         };
 
-        // Fechar com ESC ou clique fora
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { menu.hidden = true; btn.focus(); } });
-        document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target) && e.target !== btn) menu.hidden = true; });
-
-        applyState();
+        apply();
     })();
     </script>
     <?php
