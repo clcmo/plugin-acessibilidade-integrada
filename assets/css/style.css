@@ -1,0 +1,299 @@
+/* 1. SETUP & VARIÁVEIS 
+   ────────────────────────────────────────────────────────── */
+:root {
+    /* Cores do Site */
+    --c-ink: #1a1a1a;
+    --c-muted: #666;
+    --c-bg: #f7f5f0;
+    --c-surface: #ffffff;
+    --c-border: #e0dbd2;
+    --c-accent: #2a6496;
+
+    /* Cores do Plugin PAI */
+    --pai-bg: #2a6496;
+    --pai-menu-bg: #ffffff;
+    --pai-menu-text: #333;
+    --pai-btn-border: #2a6496;
+    --pai-shadow: rgba(0, 0, 0, 0.18);
+    --pai-menu-border: #ddd;
+
+    /* Tipografia */
+    --font-body: 'DM Sans', sans-serif;
+    --font-serif: 'Lora', Georgia, serif;
+}
+
+/* Modo Alto Contraste */
+body.pai-high-contrast {
+    --c-bg: #000;
+    --c-ink: #fff;
+    --c-surface: #111;
+    --c-border: #444;
+    --c-accent: #ffff00;
+    --pai-menu-bg: #000;
+    --pai-menu-text: #fff;
+    --pai-btn-border: #ffff00;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--c-bg);
+    color: var(--c-ink);
+    font-family: var(--font-body);
+    line-height: 1.7;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* 2. COMPONENTES DO SITE 
+   ────────────────────────────────────────────────────────── */
+header {
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.site-name {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--c-accent);
+}
+
+nav a {
+    font-size: 0.875rem;
+    color: var(--c-muted);
+    text-decoration: none;
+    margin-left: 1.5rem;
+    transition: color 0.2s;
+}
+
+nav a:hover { color: var(--c-accent); }
+
+.hero {
+    background: var(--c-accent);
+    color: #fff;
+    padding: 5rem 2rem;
+    text-align: center;
+}
+
+.hero h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 1rem;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 99px;
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+article {
+    background: var(--c-surface);
+    border-radius: 12px;
+    border: 1px solid var(--c-border);
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+/* 3. PLUGIN PAI (ACESSIBILIDADE) 
+   ────────────────────────────────────────────────────────── */
+#pai-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--pai-bg);
+    color: #fff;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    z-index: 10001;
+    box-shadow: 0 4px 14px var(--pai-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+#pai-btn:hover { transform: scale(1.1); }
+
+#pai-menu {
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    background: var(--pai-menu-bg);
+    border: 1px solid var(--pai-menu-border);
+    padding: 16px;
+    border-radius: 14px;
+    z-index: 10000;
+    width: 290px;
+    box-shadow: 0 10px 28px var(--pai-shadow);
+    
+    /* Configuração de Rolagem Percentual */
+    max-height: 80vh; 
+    display: none; 
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Scrollbar Customizada */
+#pai-menu::-webkit-scrollbar { width: 6px; }
+#pai-menu::-webkit-scrollbar-thumb {
+    background-color: var(--pai-bg);
+    border-radius: 10px;
+}
+
+.pai-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #aaa;
+    margin: 12px 0 6px;
+    letter-spacing: 1px;
+}
+
+.pai-opt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1.5px solid var(--pai-btn-border);
+    background: transparent;
+    color: var(--pai-btn-border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.pai-opt:hover, .pai-opt.active {
+    background: var(--pai-bg);
+    color: #fff;
+}
+
+/* Filtros de Daltonismo */
+.pai-protanopia { filter: url('#pai-f-p'); }
+.pai-deuteranopia { filter: url('#pai-f-d'); }
+.pai-tritanopia { filter: url('#pai-f-t'); }
+.pai-achromatopsia { filter: grayscale(1); }
+
+/* 4. MÓDULO VLIBRAS (ESTRITAMENTE RESTRITO AO MENU) 
+   ────────────────────────────────────────────────────────── */
+#toggle-vlibras {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+    border: 1.5px solid #004587;
+    background: #004587;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 5px;
+}
+
+#toggle-vlibras.active {
+    background: #c0392b;
+    border-color: #c0392b;
+}
+
+.pai-vlibras-container {
+    width: 100%;
+    height: 0;
+    opacity: 0;
+    overflow: hidden; /* Escondido quando fechado */
+    transition: all 0.4s ease-in-out;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.pai-vlibras-container.active {
+    height: 320px;    /* Aumentamos um pouco a altura */
+    opacity: 1;
+    margin: 10px 0;
+    padding: 10px 0;
+    overflow: visible !important; /* PERMITE VER O CABEÇALHO DO BONECO */
+}
+
+/* Forçando o widget a respeitar o container (Substitui o Fixed do governo) */
+.v-libras-wrapper {
+    position: relative !important;
+    display: none;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.v-libras-wrapper.active {
+    display: flex !important;
+}
+
+/* Esconde elementos indesejados do widget original */
+[vw-access-button], 
+[vw-plugin-wrapper]:not(.active) {
+    display: none !important;
+}
+
+/* Garante que o painel interno seja relativo ao container */
+.vp-plugin-wrapper, [vw-plugin-wrapper] {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+}
+
+[vw-plugin-wrapper].active {
+    display: block !important;
+    position: relative !important;
+    z-index: 9;
+}
+
+/* 5. UTILITÁRIOS 
+   ────────────────────────────────────────────────────────── */
+.badge { padding: 2px 10px; border-radius: 99px; font-size: 12px; }
+.badge-fix { background: #d1ecf1; color: #0c5460; }
+.badge-ok { background: #d4edda; color: #155724; }
+
+footer {
+    padding: 3rem;
+    text-align: center;
+    border-top: 1px solid var(--c-border);
+    color: var(--c-muted);
+}
