@@ -3,6 +3,7 @@
  * Plugin Name: Acessibilidade Integrada (PAI)
  * Version: 5.2.0
  * Author: Camila L. Oliveira
+ * Description: Widget de acessibilidade para WordPress com alto contraste, ajuste de fonte, filtros de daltonismo e tradução em Libras. Use o botão azul no canto inferior direito.
  * Plugin URI: http://wordpress.org/plugins/acessibilidade-integrada/
  * Author URI: https://go.camilaloliveira.com/dev
  * Text Domain: acessibilidade-integrada
