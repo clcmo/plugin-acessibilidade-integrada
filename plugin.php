@@ -2,7 +2,10 @@
 /**
  * Plugin Name: Plugin de Acessibilidade Integrado (PAI)
  * Version: 5.2.0
- * Author: Camila
+ * Author: Camila L. Oliveira
+ * Plugin URI: http://wordpress.org/plugins/plugin-acessibilidade-integrada/
+ * Author URI: https://go.camilaloliveira.com/dev
+ * Text Domain: plugin-acessibilidade-integrada
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
