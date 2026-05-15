@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Plugin de Acessibilidade Integrado (PAI)
+ * Plugin Name: Acessibilidade Integrada (PAI)
  * Version: 5.2.0
  * Author: Camila L. Oliveira
- * Plugin URI: http://wordpress.org/plugins/plugin-acessibilidade-integrada/
+ * Plugin URI: http://wordpress.org/plugins/acessibilidade-integrada/
  * Author URI: https://go.camilaloliveira.com/dev
- * Text Domain: plugin-acessibilidade-integrada
+ * Text Domain: acessibilidade-integrada
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
