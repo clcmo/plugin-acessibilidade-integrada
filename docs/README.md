@@ -1,18 +1,11 @@
-# Título do Projeto
+# ♿ Plugin de Acessibilidade Integrado (PAI)
 
 [![GitHub license](https://img.shields.io/github/license/clcmo/plugin-acessibilidade-integrada?style=for-the-badge)](https://github.com/clcmo/plugin-acessibilidade-integrada)
 [![GitHub stars](https://img.shields.io/github/stars/clcmo/plugin-acessibilidade-integrada?style=for-the-badge)](https://github.com/clcmo/plugin-acessibilidade-integrada/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/clcmo/plugin-acessibilidade-integrada?style=for-the-badge)](https://github.com/clcmo/plugin-acessibilidade-integrada/network)
 [![GitHub issues](https://img.shields.io/github/issues/clcmo/plugin-acessibilidade-integrada?style=for-the-badge)](https://github.com/clcmo/plugin-acessibilidade-integrada/issues)
-[![GitHub donate](https://img.shields.io/github/sponsors/clcmo?color=pink&style=for-the-badge)](https://github.com/sponsors/clcmo)
-
-# ♿ Plugin de Acessibilidade Integrado (PAI)
-
-[![GitHub license](https://img.shields.io/github/license/clcmo/plugin-acessibilidade-integrada?style=for-the-badge)](https://github.com/clcmo/plugin-acessibilidade-integrada/blob/main/LICENCE)
-[![GitHub stars](https://img.shields.io/github/stars/clcmo/plugin-acessibilidade-integrada?style=for-the-badge)](https://github.com/clcmo/plugin-acessibilidade-integrada/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/clcmo/plugin-acessibilidade-integrada?style=for-the-badge)](https://github.com/clcmo/plugin-acessibilidade-integrada/network)
-[![GitHub issues](https://img.shields.io/github/issues/clcmo/plugin-acessibilidade-integrada?style=for-the-badge)](https://github.com/clcmo/plugin-acessibilidade-integrada/issues)
 [![Version](https://img.shields.io/badge/version-5.2.0-blue?style=for-the-badge)](https://github.com/clcmo/plugin-acessibilidade-integrada/releases)
+[![GitHub donate](https://img.shields.io/github/sponsors/clcmo?color=pink&style=for-the-badge)](https://github.com/sponsors/clcmo)
 
 Plugin WordPress para adicionar um widget de acessibilidade integrado ao seu site, com suporte a alto contraste, ajuste de fonte, filtros para daltonismo e tradução em Libras via vLibras.
 
