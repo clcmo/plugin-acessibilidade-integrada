@@ -14,13 +14,13 @@ function pai_plugin_assets() {
     wp_enqueue_style('material-symbols', 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
     // Seu CSS à parte
-    wp_enqueue_style('pai-style', plugins_url( '/assets/css/style.css', __FILE__ ), [], '5.2.0');
+    wp_enqueue_style('style', plugins_url( '/assets/css/style.css', __FILE__ ), [], '5.2.0');
 
     // Script do vLibras (Externo)
     wp_enqueue_script('vlibras-externo', 'https://vlibras.gov.br/app/vlibras-plugin.js', [], null, true);
 
     // Seu JS à parte (dependente do vLibras)
-    wp_enqueue_script('pai-script', plugins_url( '/assets/js/script.js', __FILE__ ), ['vlibras-externo'], '5.2.0', true);
+    wp_enqueue_script('script', plugins_url( '/assets/js/script.js', __FILE__ ), ['vlibras-externo'], '5.2.0', true);
 }
 
 // 2. Renderiza apenas o HTML no footer
