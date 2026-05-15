@@ -134,7 +134,7 @@ Para reportar vulnerabilidades, consulte a [política de segurança](https://git
 
 ## 📄 Licença
 
-Distribuído sob a licença **GNU**. Consulte o arquivo [LICENCE](https://github.com/clcmo/plugin-acessibilidade-integrada/blob/main/LICENCE) para mais informações.
+Distribuído sob a licença **GPL 2.0**. Consulte o arquivo [LICENCE](https://github.com/clcmo/plugin-acessibilidade-integrada/blob/main/LICENSE) para mais informações.
 
 ---
 
